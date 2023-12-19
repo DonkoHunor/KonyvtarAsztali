@@ -20,12 +20,12 @@ namespace KonyvtarAsztali
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private List<Konyv> konyvek = new Statisztika().konyvek;
+		private Connection konyvek = new Connection();
 
 		public MainWindow()
 		{
 			InitializeComponent();
-			data.ItemsSource = konyvek;
+			data.ItemsSource = konyvek.GetAll();
 		}
 
 		private void btn_delete_Click(object sender, RoutedEventArgs e)
@@ -39,11 +39,10 @@ namespace KonyvtarAsztali
 			{
 				if(MessageBoxResult.Yes == MessageBox.Show("Biztos törölni akarja ezt a könyvet?\n"+selected.Title,"Törlés",MessageBoxButton.YesNo,MessageBoxImage.Warning))
 				{
-					new Statisztika().Delete(selected);
+					konyvek.Delete(selected);
 				}
 			}
-			konyvek = new Statisztika().konyvek;
-			data.ItemsSource = konyvek;
+			data.ItemsSource = konyvek.GetAll();
 		}
 	}
 }

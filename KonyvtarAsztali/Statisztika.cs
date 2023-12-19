@@ -10,38 +10,11 @@ namespace KonyvtarAsztali
     class Statisztika
     {
         public List<Konyv> konyvek = new Konyv().GetKonyvek();
-		private MySqlConnection connection;
+        private Connection connection = new Connection();
 
         public Statisztika() 
         {
-			GetAll();
-		}
-
-        public void GetAll()
-        {
-			MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder();
-			builder.Port = 3306;
-			builder.Server = "localhost";
-			builder.UserID = "root";
-			builder.Password = "";
-			builder.Database = "vizsga-2022-14s-wip-db";
-			connection = new MySqlConnection(builder.ConnectionString);
-			connection.Open();
-			MySqlCommand command = connection.CreateCommand();
-			command.CommandText = "SELECT id, title, author, publish_year, page_count FROM books";
-			using (MySqlDataReader reader = command.ExecuteReader())
-			{
-				while (reader.Read())
-				{
-					int id = reader.GetInt32("id");
-					string title = reader.GetString("title");
-					string author = reader.GetString("author");
-					int publish_year = reader.GetInt32("publish_year");
-					int page_count = reader.GetInt32("page_count");
-					new Konyv(id, title, author, publish_year, page_count);
-				}
-			}
-			connection.Close();
+			connection.GetAll();
 		}
 
         public void Run()
@@ -50,6 +23,7 @@ namespace KonyvtarAsztali
             Van();
             Leghosszab();
             Szerzo();
+			Cim();
         }
 
         public void Hosz()
@@ -136,14 +110,9 @@ namespace KonyvtarAsztali
             Console.WriteLine("A legtöbb könyvvel rendelkező szerző: " + author);
 		}
 
-		public void Delete(Konyv selected)
+		public void Cim()
 		{
-			connection.Open();
-			MySqlCommand command = connection.CreateCommand();
-			command.CommandText = "DELETE FROM books WHERE id=@id";
-			command.Parameters.AddWithValue("id",selected.Id);
-			command.ExecuteNonQuery();
-			connection.Close();
+
 		}
 	}
 }
